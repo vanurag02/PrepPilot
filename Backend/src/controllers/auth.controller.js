@@ -14,7 +14,7 @@ async function registerUserController(req, res) {
   const { username, email, password } = req.body;
 
   // CHECKING THE INPUT
-  if (!userName || !email || !password) {
+  if (!username || !email || !password) {
     return res.status(400).json({
       message: "Please provide username, email, and password.",
     });
