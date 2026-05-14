@@ -7,35 +7,36 @@ const tokenBlacklistModel = require("../models/blacklist.model.js");
 /* =============== REGISTER USER CONTROLLER =============== */
 /**
 @name - registerUserController
-@description REGISTER A NEW USER, EXPECTS USERNAME, EMAIL, AND PASSWORD IN THE BODY
-@access PUBLIC
+@description - REGISTER A NEW USER, EXPECTS USERNAME, EMAIL, AND PASSWORD IN REQUEST BODY
+@access - PUBLIC
 */
 
 async function registerUserController(req, res) {
+  // GETTING USER INPUT
   const { username, email, password } = req.body;
 
-  // CHECKING THE INPUT
+  // VALIDATING REQUIRED FIELDS
   if (!username || !email || !password) {
     return res.status(400).json({
       message: "Please provide username, email, and password.",
     });
   }
 
-  // CHECKING IF USER ALREADY EXIST
+  // CHECKING EXISTING USER
   const isUserAlreadyExist = await userModel.findOne({
     $or: [{ username }, { email }],
   });
 
-  // CHECKING IF ALREADY EXIST WITH USERNAME AND EMAIL
+  // CHECKING WHETHER USERNAME OR EMAIL ALREADY EXISTS
   if (isUserAlreadyExist) {
-    // USER ALREADY EXIST WITH USERNAME
+    // USER ALREADY EXISTS WITH THIS USERNAME
     if (isUserAlreadyExist.username === username) {
       return res.status(400).json({
         message: "Account with this username already exist.",
       });
     }
 
-    // USER ALREADY EXIST WITH EMAIL
+    // USER ALREADY EXISTS WITH THIS EMAIL
     if (isUserAlreadyExist.email === email) {
       return res.status(400).json({
         message: "Account with this email already exist.",
@@ -43,17 +44,17 @@ async function registerUserController(req, res) {
     }
   }
 
-  /* =============== HASHING THE PASSWORD =============== */
+  /* =============== HASHING PASSWORD =============== */
   const hash = await bcrypt.hash(password, 10);
 
-  /* =============== CREATING A USER =============== */
+  /* =============== CREATING USER =============== */
   const user = await userModel.create({
     username,
     email,
     password: hash,
   });
 
-  /* =============== CREATING TOKEN =============== */
+  // CREATING JWT TOKEN
   const token = jwt.sign(
     {
       id: user._id,
@@ -63,7 +64,7 @@ async function registerUserController(req, res) {
     { expiresIn: "1d" },
   );
 
-  /* =============== SETTING ABOVE TOKEN INTO COOKIE =============== */
+  // STORING TOKEN IN COOKIE
   res.cookie("token", token);
 
   res.status(201).json({
@@ -79,32 +80,35 @@ async function registerUserController(req, res) {
 /* =============== LOGIN USER CONTROLLER =============== */
 /**
 @name - loginUserController
-@description LOGIN A NEW USER, EXPECTS EMAIL, AND PASSWORD IN THE BODY
+@description - LOGIN AN EXISTING USER, EXPECTS EMAIL AND PASSWORD IN REQUEST BODY
 @access - PUBLIC
 */
 
 async function loginUserController(req, res) {
+  //GETTING USER INPUT
   const { email, password } = req.body;
 
-  // CHECK IF ANY USER EXIST WITH THIS EMAIL
+  //CHECKING USER EXISTENCE
   const user = await userModel.findOne({ email });
 
+  // CHECKING IF USER EXISTS
   if (!user) {
     return res.status(400).json({
       message: "Invalid email or password.",
     });
   }
 
-  // CHECKING PASSWORD
+  //VERIFYING PASSWORD
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
+  // CHECKING IF PASSWORD IS VALID
   if (!isPasswordValid) {
     return res.status(400).json({
       message: "Invalid email or password.",
     });
   }
 
-  /* =============== CREATING TOKEN =============== */
+  //CREATING JWT TOKEN
   const token = jwt.sign(
     {
       id: user._id,
@@ -114,7 +118,7 @@ async function loginUserController(req, res) {
     { expiresIn: "1d" },
   );
 
-  /* =============== SETTING ABOVE TOKEN INTO COOKIE =============== */
+  //STORING TOKEN IN COOKIE
   res.cookie("token", token);
 
   res.status(201).json({
@@ -129,18 +133,21 @@ async function loginUserController(req, res) {
 
 /* =============== LOGOUT USER CONTROLLER =============== */
 /**
-@name - loginUserController
-@description LOGIN A NEW USER, EXPECTS EMAIL, AND PASSWORD IN THE BODY
+@name - logoutUserController
+@description - LOGOUT USER BY CLEARING COOKIE TOKEN AND BLACKLISTING THE TOKEN
 @access - PUBLIC
 */
 
 async function logoutUserController(req, res) {
-  const token = req.cookie.token;
+  // GETTING TOKEN FROM COOKIES
+  const token = req.cookies.token;
 
+  // ADDING TOKEN TO BLACKLIST
   if (token) {
     await tokenBlacklistModel.create({ token });
   }
 
+  // CLEARING TOKEN COOKIE
   res.clearCookie("token");
 
   res.status(200).json({
@@ -148,8 +155,31 @@ async function logoutUserController(req, res) {
   });
 }
 
+/* =============== GET LOGGED IN USER CONTROLLER =============== */
+/**
+@name - getMeController
+@description - GET DETAILS OF CURRENT LOGGED IN USER
+@access - PRIVATE
+*/
+
+async function getMeController(req, res) {
+  //FETCHING USER DETAILS
+  const user = await userModel.findById(req.user.id);
+
+  res.status(200).json({
+    message: "User details fetched successfully.",
+    user: {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+  });
+}
+
+/* =============== EXPORTING CONTROLLERS =============== */
 module.exports = {
   registerUserController,
   loginUserController,
   logoutUserController,
+  getMeController,
 };
