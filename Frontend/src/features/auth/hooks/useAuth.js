@@ -1,16 +1,22 @@
+/* =============== IMPORTS =============== */
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../auth.context";
 import { register, login, logout, getMe } from "../services/auth.api";
 
+/* =============== USE AUTH HOOK =============== */
 export const useAuth = () => {
   const context = useContext(AuthContext);
+
   const { user, setUser, loading, setLoading } = context;
 
-  //   REGISTER
+  /* =============== REGISTER USER HANDLER =============== */
   const handleRegister = async ({ username, email, password }) => {
     setLoading(true);
+
     try {
+      // SENDING REGISTER REQUEST
       const data = await register({ username, email, password });
+
       setUser(data.user);
     } catch (error) {
       console.log(error.message);
@@ -19,11 +25,14 @@ export const useAuth = () => {
     }
   };
 
-  //   LOGIN
+  /* =============== LOGIN USER HANDLER =============== */
   const handleLogin = async ({ email, password }) => {
     setLoading(true);
+
     try {
+      // SENDING LOGIN REQUEST
       const data = await login({ email, password });
+
       setUser(data.user);
     } catch (error) {
       console.log(error.message);
@@ -32,11 +41,14 @@ export const useAuth = () => {
     }
   };
 
-  //   LOGOUT
+  /* =============== LOGOUT USER HANDLER =============== */
   const handleLogout = async () => {
     setLoading(true);
+
     try {
-      const data = await logout();
+      // SENDING LOGOUT REQUEST
+      await logout();
+
       setUser(null);
     } catch (error) {
       console.log(error.message);
@@ -45,9 +57,12 @@ export const useAuth = () => {
     }
   };
 
+  /* =============== FETCHING AUTHENTICATED USER =============== */
   useEffect(() => {
     const getAndSetUser = async () => {
+      // FETCHING CURRENT LOGGED IN USER
       const data = await getMe();
+
       setUser(data.user);
       setLoading(false);
     };
@@ -55,6 +70,7 @@ export const useAuth = () => {
     getAndSetUser();
   }, []);
 
+  /* =============== RETURNING AUTH VALUES =============== */
   return {
     user,
     loading,

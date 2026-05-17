@@ -122,6 +122,7 @@ const interviewReportSchema = new mongoose.Schema(
   },
 );
 
+/* =============== EXPORT =============== */
 const interviewReportModel = mongoose.Model(
   "InterviewReport",
   interviewReportSchema,
