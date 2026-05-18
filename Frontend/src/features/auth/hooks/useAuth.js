@@ -60,11 +60,22 @@ export const useAuth = () => {
   /* =============== FETCHING AUTHENTICATED USER =============== */
   useEffect(() => {
     const getAndSetUser = async () => {
-      // FETCHING CURRENT LOGGED IN USER
-      const data = await getMe();
+      try {
+        // FETCHING CURRENT LOGGED IN USER
+        const data = await getMe();
 
-      setUser(data.user);
-      setLoading(false);
+        // CHECK IF DATA EXISTS
+        if (data && data.user) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.log(error.message);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getAndSetUser();
