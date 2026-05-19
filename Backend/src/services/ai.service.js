@@ -1,34 +1,35 @@
 const { GoogleGenAI } = require("@google/genai");
-const { z } = require("zod");
-const { zodToJsonSchema } = require("zod-to-json-schema");
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GEN_AI_API_KEY,
 });
 
-const googleResponseSchema = {
+const interviewReportSchema = {
   type: "OBJECT",
   properties: {
     matchScore: {
       type: "INTEGER",
       description:
-        "A score between 0 and 100 indicating how well the candidate's profile matches the job description.",
+        "A score between 0 and 100 indicating how well the candidate's profile matches the job description",
     },
     technicalQuestions: {
       type: "ARRAY",
-      description:
-        "Technical questions that can be asked in the interview along with intention and answers.",
       items: {
         type: "OBJECT",
         properties: {
-          question: { type: "STRING", description: "The technical question." },
+          question: {
+            type: "STRING",
+            description: "The technical question can be asked in the interview",
+          },
           intention: {
             type: "STRING",
-            description: "The intention behind asking this question.",
+            description:
+              "The intention of interviewer behind asking this question",
           },
           answer: {
             type: "STRING",
-            description: "Detailed guide on how to answer this question.",
+            description:
+              "How to answer this question, what points to cover, what approach to take etc.",
           },
         },
         required: ["question", "intention", "answer"],
@@ -36,20 +37,23 @@ const googleResponseSchema = {
     },
     behavioralQuestions: {
       type: "ARRAY",
-      description:
-        "Behavioral questions that can be asked in the interview along with intention and answers.",
       items: {
         type: "OBJECT",
         properties: {
-          question: { type: "STRING", description: "The behavioral question." },
+          question: {
+            type: "STRING",
+            description:
+              "The behavioral question can be asked in the interview",
+          },
           intention: {
             type: "STRING",
-            description: "The intention behind asking this question.",
+            description:
+              "The intention of interviewer behind asking this question",
           },
           answer: {
             type: "STRING",
             description:
-              "Detailed guide on how to answer this question using the STAR method.",
+              "How to answer this question, what points to cover, what approach to take etc.",
           },
         },
         required: ["question", "intention", "answer"],
@@ -57,14 +61,16 @@ const googleResponseSchema = {
     },
     skillGaps: {
       type: "ARRAY",
-      description: "List of skill gaps identified in the candidate profile.",
       items: {
         type: "OBJECT",
         properties: {
-          skill: { type: "STRING", description: "The missing skill name." },
+          skill: {
+            type: "STRING",
+            description: "The skill which the candidate is lacking",
+          },
           severity: {
             type: "STRING",
-            description: "The severity level: low, medium, or high.",
+            description: "The severity of this skill gap: low, medium, or high",
           },
         },
         required: ["skill", "severity"],
@@ -72,23 +78,23 @@ const googleResponseSchema = {
     },
     preparationPlan: {
       type: "ARRAY",
-      description: "A day-by-day roadmap tailored for the candidate.",
       items: {
         type: "OBJECT",
         properties: {
           day: {
             type: "INTEGER",
-            description: "The day number starting from 1.",
+            description:
+              "The day number in the preparation plan, starting from 1",
           },
           focus: {
             type: "STRING",
-            description: "The main core focus theme of this day.",
+            description: "The main focus of this day in the preparation plan",
           },
           tasks: {
             type: "ARRAY",
             items: { type: "STRING" },
             description:
-              "List of explicit action strings for tasks to execute.",
+              "List of tasks to be done on this day to follow the preparation plan",
           },
         },
         required: ["day", "focus", "tasks"],
@@ -96,7 +102,8 @@ const googleResponseSchema = {
     },
     title: {
       type: "STRING",
-      description: "The target job title computed from the parameters.",
+      description:
+        "The title of the job for which the interview report is generated",
     },
   },
   required: [
@@ -109,9 +116,6 @@ const googleResponseSchema = {
   ],
 };
 
-/* ==========================================================================
-   GENERATION SERVICE FUNCTION
-   ========================================================================== */
 async function generateInterviewReport({
   resume,
   selfDescription,
@@ -132,7 +136,7 @@ async function generateInterviewReport({
       contents: prompt,
       config: {
         responseMimeType: "application/json",
-        responseSchema: googleResponseSchema, // Using our raw native object configuration
+        responseSchema: interviewReportSchema, // Using our raw native object configuration
       },
     });
 
@@ -142,7 +146,7 @@ async function generateInterviewReport({
 
     return parsedData;
   } catch (error) {
-    console.error(error.message);
+    console.error("Error processing generation sequence:", error.message);
   }
 }
 
