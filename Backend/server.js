@@ -18,6 +18,5 @@ generateInterviewReport({ resume, selfDescription, jobDescription });
 
 /* =============== SERVER LISTEN =============== */
 app.listen(PORT, HOST, () => {
-  console.log(process.env.GOOGLE_GEN_AI_API_KEY);
   console.log(`Server running at http://${HOST}:${PORT}`);
 });
