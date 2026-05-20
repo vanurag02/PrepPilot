@@ -13,9 +13,14 @@ app.use(
     credentials: true,
   }),
 );
+
 /* =============== AUTH ROUTER =============== */
 const authRouter = require("./routes/auth.routes.js");
 app.use("/api/auth", authRouter);
+
+/* =============== INTERVIEW ROUTER =============== */
+const interviewRouter = require("./routes/interview.routes.js");
+app.use("/api/interview", interviewRouter);
 
 /* =============== APP EXPORT =============== */
 module.exports = app;

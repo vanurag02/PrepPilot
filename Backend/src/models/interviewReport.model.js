@@ -14,7 +14,7 @@ const mongoose = require("mongoose");
  *
  */
 
-/* =============== TECHNICAL QUESTIN SCHEMA =============== */
+/* =============== TECHNICAL QUESTION SCHEMA =============== */
 const technicalQuestionSchema = new mongoose.Schema(
   {
     question: {
@@ -35,7 +35,7 @@ const technicalQuestionSchema = new mongoose.Schema(
   },
 );
 
-/* =============== BEHAVIORAL QUESTIN SCHEMA =============== */
+/* =============== BEHAVIORAL QUESTION SCHEMA =============== */
 const behavioralQuestionSchema = new mongoose.Schema(
   {
     question: {
