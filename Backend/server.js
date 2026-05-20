@@ -1,6 +1,6 @@
+require("dotenv").config();
 /* =============== IMPORTS =============== */
 const app = require("./src/app.js");
-require("dotenv").config();
 const connectToDB = require("./src/config/database");
 
 /* =============== HOST AND PORT DECLARATION =============== */
