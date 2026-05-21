@@ -1,83 +1,481 @@
-.home {
+// ── Variables ────────────────────────────────────────────────────────────────
+$bg-page: #212529; // gray-9
+$bg-card: #343a40; // gray-8
+$bg-panel: #343a40; // gray-8
+$bg-input: #495057; // gray-7
+
+$border-color: #495057; // gray-7
+
+$text-primary: #f8f9fa; // gray-0
+$text-muted: #adb5bd; // gray-5
+
+// ── Blue Accent Theme ────────────────────────────────────────────────────────
+$accent: #339af0; // blue-5
+$accent-alt: #228be6; // blue-6
+
+$badge-required: #339af0;
+$badge-best: #228be6;
+
+$info-bg: rgba(#1c7ed6, 0.15); // blue-7
+$info-border: rgba(#339af0, 0.35);
+
+// ── Typography ───────────────────────────────────────────────────────────────
+$font-stack:
+  system-ui,
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  Roboto,
+  sans-serif;
+
+// ── Page Shell ───────────────────────────────────────────────────────────────
+.home-page {
   width: 100%;
   min-height: 100vh;
+  background-color: $bg-page;
+  color: $text-primary;
+  font-family: $font-stack;
+
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
 
-  .interview-input-group {
+  padding: 3rem 1.5rem;
+  gap: 2rem;
+}
+
+// ── Page Header ──────────────────────────────────────────────────────────────
+.page-header {
+  text-align: center;
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: $text-primary;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: 0.95rem;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .highlight {
+    color: $accent;
+  }
+}
+
+// ── Main Card ────────────────────────────────────────────────────────────────
+.interview-card {
+  width: 100%;
+  max-width: 900px;
+
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 1rem;
+
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+
+  &__body {
     display: flex;
-    justify-content: center;
+    min-height: 520px;
+  }
+
+  &__footer {
+    display: flex;
     align-items: center;
-    gap: 1rem;
-    min-width: 600px;
-    min-height: 500px;
+    justify-content: space-between;
+
+    padding: 1rem 1.5rem;
+    border-top: 1px solid $border-color;
+
+    .footer-info {
+      font-size: 0.8rem;
+      color: $text-muted;
+    }
+  }
+}
+
+// ── Panels ───────────────────────────────────────────────────────────────────
+.panel-divider {
+  width: 1px;
+  background-color: $border-color;
+  flex-shrink: 0;
+}
+
+.panel {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+  padding: 1.5rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    margin-bottom: 0.25rem;
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: $text-primary;
+      flex: 1;
+    }
   }
 
-  .input-group:has(textarea) {
-    height: 100%;
+  &__icon {
+    display: flex;
+    align-items: center;
+    color: $accent;
   }
 
-  textarea {
-    height: 100%;
+  &__textarea {
+    flex: 1;
     width: 100%;
-    border: none;
-    outline: none;
-    padding-inline: 1rem;
-    padding-block: 0.75rem;
-    border-radius: 4px;
-    background-color: #343a40;
-    color: white;
-    resize: none;
-  }
 
-  textarea::placeholder {
-    font-size: 16px;
-    color: white;
-    font-family:
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      "Open Sans",
-      "Helvetica Neue",
-      sans-serif;
-  }
+    background-color: $bg-input;
+    border: 1px solid $border-color;
+    border-radius: 0.5rem;
 
-  .left {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-self: stretch;
-    width: 50%;
-  }
-
-  .file-label {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 0.75rem 1rem;
-    background-color: #495057;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
+
+    color: $text-primary;
+    font-family: $font-stack;
+    font-size: 0.875rem;
+
+    resize: none;
+    outline: none;
+
+    transition:
+      border-color 0.2s,
+      background-color 0.2s;
+
+    line-height: 1.5;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:focus {
+      border-color: $accent;
+      background-color: lighten($bg-input, 3%);
+    }
+
+    &--short {
+      flex: unset;
+      height: 96px;
+    }
   }
 
-  .file-label:hover {
-    background-color: #343a40;
+  &--left {
+    position: relative;
+
+    .char-counter {
+      position: absolute;
+      bottom: 2.25rem;
+      right: 2rem;
+
+      font-size: 0.75rem;
+      color: $text-muted;
+    }
   }
 
-  .right {
+  &--right {
+    gap: 0.75rem;
+  }
+}
+
+// ── Badges ───────────────────────────────────────────────────────────────────
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  padding: 0.15rem 0.5rem;
+
+  border-radius: 0.3rem;
+
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  &--required {
+    background-color: rgba($badge-required, 0.15);
+    color: $badge-required;
+    border: 1px solid rgba($badge-required, 0.35);
+  }
+
+  &--best {
+    background-color: rgba($badge-best, 0.15);
+    color: $badge-best;
+    border: 1px solid rgba($badge-best, 0.35);
+  }
+}
+
+// ── Section Label ────────────────────────────────────────────────────────────
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  color: $text-primary;
+
+  margin-bottom: 0.25rem;
+}
+
+// ── Upload Section ───────────────────────────────────────────────────────────
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// ── Dropzone ─────────────────────────────────────────────────────────────────
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.35rem;
+
+  padding: 1.5rem 1rem;
+
+  background-color: $bg-input;
+  border: 2px dashed $border-color;
+  border-radius: 0.6rem;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    transform 0.15s;
+
+  &:hover {
+    border-color: $accent;
+    background-color: rgba($accent, 0.08);
+    transform: translateY(-2px);
+  }
+
+  &__icon {
+    color: $accent;
+    margin-bottom: 0.25rem;
+  }
+
+  &__title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-size: 0.75rem;
+    color: $text-muted;
+    margin: 0;
+  }
+}
+
+// ── OR Divider ───────────────────────────────────────────────────────────────
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  color: $text-muted;
+  font-size: 0.75rem;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: $border-color;
+  }
+
+  span {
+    white-space: nowrap;
+  }
+}
+
+// ── Self Description ─────────────────────────────────────────────────────────
+.self-description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// ── Info Box ─────────────────────────────────────────────────────────────────
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+
+  padding: 0.75rem 1rem;
+
+  background-color: $info-bg;
+  border: 1px solid $info-border;
+  border-radius: 0.5rem;
+
+  &__icon {
+    flex-shrink: 0;
+    color: $accent;
+    margin-top: 1px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: $text-primary;
+    line-height: 1.5;
+
+    strong {
+      color: $text-primary;
+    }
+  }
+}
+
+// ── Generate Button ──────────────────────────────────────────────────────────
+.generate-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.75rem 1.5rem;
+
+  background: linear-gradient(135deg, $accent 0%, darken($accent, 12%) 100%);
+
+  color: #fff;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  border: none;
+  border-radius: 0.5rem;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.2s,
+    transform 0.1s,
+    box-shadow 0.2s;
+
+  font-family: $font-stack;
+
+  box-shadow: 0 6px 20px rgba($accent, 0.25);
+
+  &:hover {
+    opacity: 0.95;
+    box-shadow: 0 8px 24px rgba($accent, 0.35);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// ── Recent Reports ───────────────────────────────────────────────────────────
+.recent-reports {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.75rem;
+
+  width: 100%;
+  max-width: 900px;
+
+  .reports-list {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-self: stretch;
-    gap: 1rem;
-    width: 50%;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    .report-item {
+      background-color: $bg-card;
+      border: 1px solid $border-color;
+      border-radius: 0.5rem;
+
+      padding: 1rem;
+
+      flex: 1;
+      flex-shrink: 0;
+
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      cursor: pointer;
+
+      transition:
+        border-color 0.2s,
+        transform 0.15s;
+
+      &:hover {
+        border-color: $accent;
+        transform: translateY(-2px);
+      }
+
+      .match-score {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: $accent;
+
+        align-items: flex-start;
+      }
+    }
+  }
+}
+
+// ── Page Footer ──────────────────────────────────────────────────────────────
+.page-footer {
+  display: flex;
+  gap: 1.5rem;
+
+  a {
+    font-size: 0.8rem;
+    color: $text-muted;
+
+    text-decoration: none;
+
+    transition: color 0.2s;
+
+    &:hover {
+      color: $text-primary;
+    }
+  }
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .interview-card {
+    &__body {
+      flex-direction: column;
+    }
+  }
+
+  .panel-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .recent-reports {
+    .reports-list {
+      flex-direction: column;
+    }
+  }
+
+  .page-footer {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }

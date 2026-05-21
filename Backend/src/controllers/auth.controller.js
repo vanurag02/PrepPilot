@@ -65,7 +65,11 @@ async function registerUserController(req, res) {
   );
 
   // STORING TOKEN IN COOKIE
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
 
   res.status(201).json({
     message: "User registered successfully.",
@@ -119,7 +123,11 @@ async function loginUserController(req, res) {
   );
 
   //STORING TOKEN IN COOKIE
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
 
   res.status(200).json({
     message: "User logged in successfully.",

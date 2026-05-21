@@ -73,11 +73,10 @@ export async function logout() {
 
 export async function getMe() {
   try {
-    /* =============== SENDING GET USER REQUEST =============== */
     const response = await api.get("/api/auth/get-me");
 
     return response.data;
   } catch (error) {
-    console.error(error.message);
+    console.log(error.message);
   }
 }
